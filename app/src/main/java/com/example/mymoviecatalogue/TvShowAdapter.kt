@@ -7,38 +7,45 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_detail_movie.view.*
+import kotlinx.android.synthetic.main.item_tvshow.view.*
 import org.w3c.dom.Text
 
-class TvShowAdapter internal constructor(private val context: Context) : BaseAdapter() {
-    internal var tvshows = arrayListOf<TvShow>()
+class TvShowAdapter(private val listTvShow: ArrayList<TvShow>): RecyclerView.Adapter<TvShowAdapter.ListViewHolder>() {
 
-    override fun getView(position: Int, view: View?, viewGroup: ViewGroup?): View {
-        var itemView = view
-        if (itemView == null){
-            itemView = LayoutInflater.from(context).inflate(R.layout.item_tvshow, viewGroup, false)
+    var listener: OnTvShowListener? = null
+
+    inner class ListViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bind(tvshow: TvShow){
+            with(itemView){
+                Glide.with(itemView.context)
+                    .load(tvshow.photo)
+                    .into(poster_tvshow)
+
+                txt_name.text = tvshow.name
+                txt_description.text = tvshow.description
+
+                itemView.setOnClickListener {
+                    listener?.onTvShowItemClicked(tvshow)
+                }
+            }
         }
-        val viewHolder = ViewHolder(itemView as View)
-
-        val tvshow = getItem(position) as TvShow
-        viewHolder.bind(tvshow)
-        return itemView
     }
 
-    override fun getItem(position: Int): Any = tvshows[position]
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ListViewHolder {
+        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_tvshow, viewGroup, false)
+        return ListViewHolder(view)
+    }
 
-    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getItemCount(): Int = listTvShow.size
 
-    override fun getCount(): Int = tvshows.size
+    override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
+        holder.bind(listTvShow[position])
+    }
 
-    private inner class ViewHolder internal constructor(view: View){
-        private val textName: TextView = view.findViewById(R.id.txt_name)
-        private val textDescription: TextView = view.findViewById(R.id.txt_description)
-        private val imagePoster: ImageView = view.findViewById(R.id.poster_tvshow)
-
-        internal fun bind(tvshow: TvShow){
-            textName.text = tvshow.name
-            textDescription.text = tvshow.description
-            imagePoster.setImageResource(tvshow.photo)
-        }
+    interface OnTvShowListener{
+        fun onTvShowItemClicked(data: TvShow)
     }
 }

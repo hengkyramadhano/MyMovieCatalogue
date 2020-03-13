@@ -36,8 +36,6 @@ class MovieFragment : Fragment(), View.OnClickListener, MovieAdapter.OnMovieList
 
         list.addAll(getListMovie())
         showRecyclerList()
-
-
     }
 
     private fun getListMovie(): ArrayList<Movie> {
