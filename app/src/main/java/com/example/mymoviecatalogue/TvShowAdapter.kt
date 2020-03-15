@@ -4,14 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_detail_movie.view.*
 import kotlinx.android.synthetic.main.item_tvshow.view.*
-import org.w3c.dom.Text
 
 class TvShowAdapter(private val listTvShow: ArrayList<TvShow>): RecyclerView.Adapter<TvShowAdapter.ListViewHolder>() {
 

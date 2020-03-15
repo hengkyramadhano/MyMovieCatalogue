@@ -3,7 +3,6 @@ package com.example.mymoviecatalogue
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_detail_movie.*
-import kotlinx.android.synthetic.main.item_movies.*
 import kotlinx.android.synthetic.main.item_movies.img_photo
 import kotlinx.android.synthetic.main.layout_description.*
 

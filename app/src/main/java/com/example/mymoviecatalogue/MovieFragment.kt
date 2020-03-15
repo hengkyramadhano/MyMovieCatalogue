@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_movie.*
 
-class MovieFragment : Fragment(), View.OnClickListener, MovieAdapter.OnMovieListener {
+class MovieFragment : Fragment(), MovieAdapter.OnMovieListener {
 
     private val list = ArrayList<Movie>()
 
@@ -50,7 +50,7 @@ class MovieFragment : Fragment(), View.OnClickListener, MovieAdapter.OnMovieList
         val listMovie = ArrayList<Movie>()
         for (position in dataName.indices) {
             val movie = Movie(
-                dataPhoto.getResourceId(position, -1),
+                dataPhoto.getResourceId(position,-1),
                 dataName[position],
                 dataDescription[position],
                 dataGenre[position],
@@ -72,10 +72,7 @@ class MovieFragment : Fragment(), View.OnClickListener, MovieAdapter.OnMovieList
 
     override fun onMovieItemClicked(data: Movie) {
         val intent = Intent(requireContext(), DetailMovie::class.java)
-        intent.putExtra(DetailMovie.EXTRA_MOVIE,data)
+        intent.putExtra(DetailMovie.EXTRA_MOVIE, data)
         startActivity(intent)
-    }
-
-    override fun onClick(v: View?) {
     }
 }

@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".TvShowFragment">
 
-    <ListView
-        android:id="@+id/lv_tv_show"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_tvshow"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_tvshow"/>
 
 </FrameLayout>

@@ -7,16 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_tv_show.*
 
-/**
- * A simple [Fragment] subclass.
- */
-class TvShowFragment : Fragment(), View.OnClickListener {
+class TvShowFragment : Fragment(), TvShowAdapter.OnTvShowListener {
 
-    private lateinit var adapter: TvShowAdapter
+    private val list = ArrayList<TvShow>()
+
     private lateinit var dataName: Array<String>
     private lateinit var dataDescription: Array<String>
     private lateinit var dataGenre: Array<String>
@@ -24,7 +22,6 @@ class TvShowFragment : Fragment(), View.OnClickListener {
     private lateinit var dataSeries: Array<String>
     private lateinit var dataRating: Array<String>
     private lateinit var dataPhoto: TypedArray
-    private var tvshows = ArrayList<TvShow>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,32 +33,13 @@ class TvShowFragment : Fragment(), View.OnClickListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        adapter = TvShowAdapter(requireContext())
-        lv_tv_show.adapter = adapter
+        rv_tvshow.setHasFixedSize(true)
 
-        prepare()
-        addItem()
-
-        lv_tv_show.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
-
-            val listDataTvShow = TvShow(0, "", "", "", "", "", "")
-            listDataTvShow.photo = dataPhoto.getResourceId(position, position)
-            listDataTvShow.name = dataName[position]
-            listDataTvShow.description = dataDescription[position]
-            listDataTvShow.genre = dataGenre[position]
-            listDataTvShow.duration = dataDuration[position]
-            listDataTvShow.series = dataSeries[position]
-            listDataTvShow.rating = dataRating[position]
-
-            val moveActivity = Intent(activity, DetailTvShowActivity::class.java)
-            moveActivity.putExtra(DetailTvShowActivity.EXTRA_TVSHOW, listDataTvShow)
-
-            this@TvShowFragment.startActivity(moveActivity)
-            Toast.makeText(activity, tvshows[position].name, Toast.LENGTH_SHORT).show()
-        }
+        list.addAll(getListTvShow())
+        showRecyclerList()
     }
 
-    private fun prepare() {
+    private fun getListTvShow(): ArrayList<TvShow> {
         dataName = resources.getStringArray(R.array.data_name_tvshow)
         dataDescription = resources.getStringArray(R.array.data_description_tvshow)
         dataPhoto = resources.obtainTypedArray(R.array.data_poster_tvshow)
@@ -69,9 +47,8 @@ class TvShowFragment : Fragment(), View.OnClickListener {
         dataDuration = resources.getStringArray(R.array.data_duration_tvshow)
         dataSeries = resources.getStringArray(R.array.data_series_tvshow)
         dataRating = resources.getStringArray(R.array.data_rating_tvshow)
-    }
 
-    private fun addItem() {
+        val listTvShow = ArrayList<TvShow>()
         for (position in dataName.indices) {
             val tvshow = TvShow(
                 dataPhoto.getResourceId(position,-1),
@@ -82,12 +59,20 @@ class TvShowFragment : Fragment(), View.OnClickListener {
                 dataSeries[position],
                 dataRating[position]
             )
-            tvshows.add(tvshow)
+            listTvShow.add(tvshow)
         }
-        adapter.tvshows = tvshows
+        return listTvShow
+    }
+    private fun showRecyclerList() {
+        rv_tvshow.layoutManager = LinearLayoutManager(requireContext())
+        val listTvShowAdapter = TvShowAdapter(list)
+        listTvShowAdapter.listener = this
+        rv_tvshow.adapter = listTvShowAdapter
     }
 
-    override fun onClick(v: View?) {
+    override fun onTvShowItemClicked(data: TvShow) {
+        val intent = Intent(requireContext(), DetailTvShowActivity::class.java)
+        intent.putExtra(DetailTvShowActivity.EXTRA_TVSHOW, data)
+        startActivity(intent)
     }
-
 }
